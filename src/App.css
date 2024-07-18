@@ -1,0 +1,19 @@
+.question-form {
+    max-width: 600px;
+    margin: auto;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
+  
+  .question-form div {
+    margin-bottom: 1rem;
+  }
+  
+  .question-form img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-top: 1rem;
+  }
+  

@@ -1,0 +1,153 @@
+.hey {
+    display: flex;
+    background-color: #ffffff;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 10px;
+    scroll-behavior: smooth;
+    font-size: 14px;
+    font-family: Helvetica, Arial, sans-serif;
+    font-weight: 500;
+}
+
+.box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 75%;
+    border: 2px solid black;
+    border-top: none;
+    box-sizing: border-box;
+}
+
+.heade {
+    display: flex;
+    color: black;
+    align-items: center;
+    justify-content: flex-start;
+    justify-content: space-around;
+    height: 100px;
+    width: 100%;
+    border-top: 3px solid #7824ff;
+    border-bottom: 3px solid #ab82ee;
+}
+
+.logo {
+    width: 15%;
+    aspect-ratio: 2/1;
+}
+.loga {
+    width: 60%;
+    aspect-ratio:9/1;
+}
+
+.inner-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 85%;
+    height: max-content;
+    padding: 10px;
+}
+
+.photo {
+    width: 10%;
+    aspect-ratio: 5/7;
+}
+
+.in-box-2 {
+    width: 95%;
+    padding: 10px 0px;
+}
+
+.table-container {
+    width: 95%;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0px;
+}
+
+.table {
+    border-collapse: collapse;
+    border: 3px solid black;
+    width: 100%;
+}
+
+.table td {
+    border: 1px solid black;
+    padding: 8px 5px;
+    width: 25%;
+}
+
+.signature {
+    width: 95%;
+    align-items: center;
+    border: 2px solid black;
+}
+
+.auth {
+    width: 100%;
+    /* aspect-ratio:8/1; */
+}
+
+p {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    margin: 0px;
+}
+
+.terms {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 95%;
+    padding: 2px;
+    border: 2px solid black;
+}
+
+.headline {
+    width: 100%;
+}
+
+.list {
+    width: 95%;
+}
+
+li {
+    padding: 2px;
+}
+
+.footer {
+    width: 95%;
+    padding: 10px 0px;
+}
+
+@media screen and (max-width: 1024px) {
+    body {
+        font-size: 10px;
+    }
+
+    .box {
+        width: 95%;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    body {
+        font-size: 7px;
+    }
+
+    .box {
+        width: 95%;
+    }
+
+    .photo {
+        width: 20%;
+        aspect-ratio: 5/7;
+    }
+}

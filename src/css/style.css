@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=fallback');
+@import url('https://fonts.googleapis.com/css2?family=Baloo+Bhai+2&family=Playfair+Display:ital,wght@1,500;1,600&family=Roboto:wght@100;300;400;500;700;900&display=swap');
+
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+
+/* Additional styles */
+@import 'additional-styles/utility-patterns.css';
+@import 'additional-styles/flatpickr.css';
+
+@import 'tailwindcss/utilities';
+
+.question-page {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+}
+
+.question-container {
+  margin-top: 20px;
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.question-image {
+  max-width: 100%;
+  height: auto;
+  max-height: 400px;
+  margin-top: 10px;
+}
+
+.correct-option {
+  font-weight: bold;
+  color: green;
+}
+
+
+@media print
+{    
+    .no-print, .no-print *
+    {
+        display: none !important;
+    }
+}
+
+.cursive{
+    font-family: 'Playfair Display', serif;
+}
+
+.watermark::after {
+    content: "";
+    background: url(/src/forms/add_students_form/watermark-removebg-preview.png) no-repeat center;
+    background-size: contain;
+    opacity: 0.2;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    z-index: 2;   
+  }
+
+.watermark {
+    position: relative;
+}
