@@ -60,6 +60,7 @@ function DisplayQuestion() {
       navigate("/");
     }
     else if (statusData === "submitted") {
+      // handleSubmitExam2()
       navigate(`/submissionSuccessful?exam_id=${exam_id}&seid=${seid}`);
     }
   }, []);
@@ -198,6 +199,30 @@ function DisplayQuestion() {
     }
   };
 
+  const handleSubmitExam2 = async () => {
+    console.log("Submitting Due to Time Finished.")
+      const response = await fetch(`https://${baseurl}/submitExam`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          exam_id: exam_id,
+          seid: seid,
+        }),
+      });
+      const seid = new URLSearchParams(window.location.search).get('seid');
+      navigate(`/submissionSuccessful?exam_id=${exam_id}&seid=${seid}`);
+      if(response.ok){
+        Alert("Time Ended, Automatically Submitting...")
+        const seid = new URLSearchParams(window.location.search).get('seid');
+        navigate(`/submissionSuccessful?exam_id=${exam_id}&seid=${seid}`);
+      }
+      else{
+        return <div>Error Submitting...</div>
+      }
+  };
+
   const handlePrevious = () => {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(currentQuestionIndex - 1);
@@ -215,6 +240,64 @@ function DisplayQuestion() {
       [name]: type === "checkbox" ? checked : value,
     });
   };
+
+  const [remainingDuration, setRemainingDuration] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    // Function to fetch initial remaining duration
+    const fetchRemainingDuration = async () => {
+      try {
+        const response = await axios.get(`https://${baseurl}/getExamStudent?seid=${seid}`);
+        setRemainingDuration(response.data.student.remaining_duration);
+      } catch (err) {
+        setError(err);
+      }
+    };
+
+    // Function to update the timer in the backend and locally
+    const updateTimer = async () => {
+      try {
+        const updatedDuration = remainingDuration - 1;
+        await axios.get(`https://${baseurl}/updateTimer?seid=${seid}&remaining_duration=${updatedDuration}`);
+        setRemainingDuration(updatedDuration);
+      } catch (err) {
+        setError(err);
+      }
+    };
+
+    // Fetch the initial duration
+    fetchRemainingDuration();
+
+    // Set up the interval to call the updateTimer function every 5 seconds
+    const interval = setInterval(() => {
+      if (remainingDuration !== null && remainingDuration > 0) {
+        updateTimer();
+      }
+      else{
+        handleSubmitExam2();
+        navigate(`/submissionSuccessful?exam_id=${exam_id}&seid=${seid}`);
+      }
+    }, 1000);
+
+    // Clear interval on component unmount
+    return () => clearInterval(interval);
+  }, [remainingDuration, seid]);
+
+  // Convert seconds to minutes and seconds
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+  };
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  if (remainingDuration === null) {
+    return <div>Loading...</div>;
+  }
 
 
   return (
@@ -237,6 +320,10 @@ function DisplayQuestion() {
                 <h2 className="font-semibold text-slate-800 dark:text-slate-100">
                   View Question
                 </h2>
+
+                <div>
+                  <h1>Remaining Time: {formatTime(remainingDuration)}</h1>
+                </div>
               </header>
 
               <div className="p-3 shadow-lg border border-gray-300 rounded-lg">
