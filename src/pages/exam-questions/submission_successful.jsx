@@ -20,7 +20,7 @@ function submission_success() {
 
   // useEffect(() => {
   //   if (!localStorage.getItem("token")) {
-  //     navigate("/");
+  //     navigate("/login");
   //   }
   // }, []);
 

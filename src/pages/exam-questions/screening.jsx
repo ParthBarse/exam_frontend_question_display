@@ -44,6 +44,10 @@ function DisplayQuestion() {
           if (statusData.status === "submitted") {
             navigate(`/submissionSuccessful?exam_id=${exam_id}&seid=${seid}`);
           }
+          if (statusData.status === "started") {
+            navigate(`/display_questions?id=${exam_id}&seid=${seid}`);
+            // navigate(`/submissionSuccessful?exam_id=${exam_id}&seid=${seid}`);
+          }
           setStatusData(statusData.status);
         } else {
           console.error("Failed to fetch questions");
@@ -58,7 +62,7 @@ function DisplayQuestion() {
 
   useEffect(() => {
     if (!exam_id || !seid) {
-      navigate("/");
+      navigate("/login");
     }
     else if (statusData === "submitted") {
       navigate(`/submissionSuccessful?exam_id=${exam_id}&seid=${seid}`);

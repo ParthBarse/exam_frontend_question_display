@@ -17,7 +17,7 @@ function CanStudent() {
 
   useEffect(() => {
     if (!localStorage.getItem("token")) {
-      navigate("/");
+      navigate("/login");
     }
   }, []);
 

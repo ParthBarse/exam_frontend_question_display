@@ -10,7 +10,9 @@ const LoginForm = ({ onLogin, onSwitchToRegister }) => {
   const navigate = useNavigate();
   useEffect(() => {
     if (localStorage.getItem("token")) {
-      navigate("/dash");
+      const seid = localStorage.getItem("seid")
+      const exam_id = localStorage.getItem("exam_id")
+      navigate(`/screening?id=${exam_id}&seid=${seid}`);
     }
   });
 
@@ -59,7 +61,9 @@ const LoginForm = ({ onLogin, onSwitchToRegister }) => {
           localStorage.setItem("maintainFlag", "off");
 
           // Redirect to /dash or perform any other actions
-          navigate("/dash");
+          const seid = localStorage.getItem("seid")
+          const exam_id = localStorage.getItem("exam_id")
+          navigate(`/screening?id=${exam_id}&seid=${seid}`);
         })
 
         .catch((error) => {
@@ -381,7 +385,9 @@ const AuthPage = () => {
   const navigate = useNavigate();
   useEffect(() => {
     if (localStorage.getItem("token")) {
-      navigate("/dash");
+      const seid = localStorage.getItem("seid")
+      const exam_id = localStorage.getItem("exam_id")
+      navigate(`/screening?id=${exam_id}&seid=${seid}`);
     }
   });
   const [isLogin, setIsLogin] = useState(true);

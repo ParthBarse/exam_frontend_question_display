@@ -21,7 +21,7 @@ export default function Discount() {
 
   useEffect(() => {
     if (!localStorage.getItem("token")) {
-      navigate("/");
+      navigate("/login");
     }
   }, []);
   async function fetchData() {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import Sidebar from "../../partials/Sidebar";
 import Header from "../../partials/Header";
@@ -57,10 +57,9 @@ function DisplayQuestion() {
 
   useEffect(() => {
     if (!exam_id || !seid) {
-      navigate("/");
+      navigate("/login");
     }
     else if (statusData === "submitted") {
-      // handleSubmitExam2()
       navigate(`/submissionSuccessful?exam_id=${exam_id}&seid=${seid}`);
     }
   }, []);
@@ -200,7 +199,8 @@ function DisplayQuestion() {
   };
 
   const handleSubmitExam2 = async () => {
-    console.log("Submitting Due to Time Finished.")
+    console.log("Submitting Due to Time Finished.");
+    try {
       const response = await fetch(`https://${baseurl}/submitExam`, {
         method: 'POST',
         headers: {
@@ -211,16 +211,17 @@ function DisplayQuestion() {
           seid: seid,
         }),
       });
-      const seid = new URLSearchParams(window.location.search).get('seid');
-      navigate(`/submissionSuccessful?exam_id=${exam_id}&seid=${seid}`);
-      if(response.ok){
-        Alert("Time Ended, Automatically Submitting...")
-        const seid = new URLSearchParams(window.location.search).get('seid');
+
+      if (response.ok) {
+        alert("Time Ended, Automatically Submitting...");
+        localStorage.removeItem('selectedAnswersMap')
         navigate(`/submissionSuccessful?exam_id=${exam_id}&seid=${seid}`);
+      } else {
+        console.error("Error Submitting...");
       }
-      else{
-        return <div>Error Submitting...</div>
-      }
+    } catch (err) {
+      console.error("Error Submitting Exam:", err);
+    }
   };
 
   const handlePrevious = () => {
@@ -243,6 +244,49 @@ function DisplayQuestion() {
 
   const [remainingDuration, setRemainingDuration] = useState(null);
   const [error, setError] = useState(null);
+  const intervalRef = useRef(null);
+
+
+  // useEffect(() => {
+  //   let interval;
+
+  //   // Function to fetch initial remaining duration
+  //   const fetchRemainingDuration = async () => {
+  //     try {
+  //       const response = await axios.get(`https://${baseurl}/getExamStudent?seid=${seid}`);
+  //       setRemainingDuration(response.data.student.remaining_duration);
+  //     } catch (err) {
+  //       setError(err);
+  //     }
+  //   };
+
+  //   // Function to update the timer in the backend and locally
+  //   const updateTimer = async () => {
+  //     try {
+  //       const updatedDuration = remainingDuration - 1;
+  //       await axios.get(`https://${baseurl}/updateTimer?seid=${seid}&remaining_duration=${updatedDuration}`);
+  //       setRemainingDuration(updatedDuration);
+  //     } catch (err) {
+  //       setError(err);
+  //     }
+  //   };
+
+  //   // Fetch the initial duration
+  //   fetchRemainingDuration();
+
+  //   // Set up the interval to call the updateTimer function every 1 second
+  //   interval = setInterval(() => {
+  //     if (remainingDuration !== null && remainingDuration > 0) {
+  //       updateTimer();
+  //     } else if (remainingDuration !== null && remainingDuration <= 0) {
+  //       handleSubmitExam2();
+  //       clearInterval(interval); // Clear the interval to prevent further calls
+  //     }
+  //   }, 1000);
+
+  //   // Clear interval on component unmount
+  //   return () => clearInterval(interval);
+  // }, [remainingDuration, seid]);
 
   useEffect(() => {
     // Function to fetch initial remaining duration
@@ -255,34 +299,63 @@ function DisplayQuestion() {
       }
     };
 
-    // Function to update the timer in the backend and locally
-    const updateTimer = async () => {
+    // Fetch the initial duration
+    fetchRemainingDuration();
+  }, [seid, baseurl]);
+
+  useEffect(() => {
+    if (remainingDuration === null) return;
+
+    // Function to handle the end of the exam
+    const handleEndExam = async () => {
+      clearInterval(intervalRef.current);
+      await handleSubmitExam2();
+    };
+
+    // Function to update the backend periodically
+    const updateBackend = async (updatedDuration) => {
       try {
-        const updatedDuration = remainingDuration - 1;
         await axios.get(`https://${baseurl}/updateTimer?seid=${seid}&remaining_duration=${updatedDuration}`);
-        setRemainingDuration(updatedDuration);
       } catch (err) {
         setError(err);
       }
     };
 
-    // Fetch the initial duration
-    fetchRemainingDuration();
+    // Function to handle the page unload event
+    const handleUnload = () => {
+      if (remainingDuration !== null) {
+        updateBackend(remainingDuration);
+      }
+    };
 
-    // Set up the interval to call the updateTimer function every 5 seconds
-    const interval = setInterval(() => {
-      if (remainingDuration !== null && remainingDuration > 0) {
-        updateTimer();
-      }
-      else{
-        handleSubmitExam2();
-        navigate(`/submissionSuccessful?exam_id=${exam_id}&seid=${seid}`);
-      }
+    // Set up the interval to count down and update the backend periodically
+    intervalRef.current = setInterval(() => {
+      setRemainingDuration((prevDuration) => {
+        if (prevDuration === null || prevDuration <= 0) {
+          handleEndExam();
+          return 0;
+        }
+
+        const newDuration = prevDuration - 1;
+
+        // Update the backend every 60 seconds
+        if (newDuration % 60 === 0) {
+          updateBackend(newDuration);
+        }
+
+        return newDuration;
+      });
     }, 1000);
 
-    // Clear interval on component unmount
-    return () => clearInterval(interval);
-  }, [remainingDuration, seid]);
+    // Add event listener for page unload
+    window.addEventListener('beforeunload', handleUnload);
+
+    // Clear interval and remove event listener on component unmount
+    return () => {
+      clearInterval(intervalRef.current);
+      window.removeEventListener('beforeunload', handleUnload);
+    };
+  }, [remainingDuration, seid, baseurl]);
 
   // Convert seconds to minutes and seconds
   const formatTime = (seconds) => {

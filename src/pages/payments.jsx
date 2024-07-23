@@ -66,7 +66,7 @@ export default function Payments() {
 
   useEffect(() => {
     if (!localStorage.getItem("token")) {
-      navigate("/");
+      navigate("/login");
     }
   }, []);
 
@@ -136,7 +136,7 @@ export default function Payments() {
 
   useEffect(() => {
     if (!localStorage.getItem("token")) {
-      navigate("/");
+      navigate("/login");
     }
   }, []);
 

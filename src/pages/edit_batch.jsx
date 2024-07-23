@@ -29,7 +29,7 @@ function EditBatch() {
 
   useEffect(() => {
     if (!localStorage.getItem("token")) {
-      navigate("/");
+      navigate("/login");
     }
   }, []);
 

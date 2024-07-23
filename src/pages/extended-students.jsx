@@ -19,7 +19,7 @@ function ExtStudent() {
 
   useEffect(() => {
     if (!localStorage.getItem("token")) {
-      navigate("/");
+      navigate("/login");
     }
   }, []);
 

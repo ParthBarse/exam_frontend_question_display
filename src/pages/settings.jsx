@@ -13,7 +13,7 @@ function Settings() {
 
   useEffect(() => {
     if (!localStorage.getItem("token")) {
-      navigate("/");
+      navigate("/login");
     }
   }, [navigate]);
 

@@ -69,6 +69,7 @@ import RegStudentsExam from "./pages/registered-students-exam";
 import DisplayQuestions from "./pages/exam-questions/display_quesions";
 import SubmissionSuccessful from "./pages/exam-questions/submission_successful";
 import ScreeningPage from "./pages/exam-questions/screening";
+import LoginPage from "./pages/exam-questions/login_page";
 
 function App() {
   const location = useLocation();
@@ -115,6 +116,7 @@ function App() {
         <Route exact path="/display_questions" element={<DisplayQuestions />} />
         <Route exact path="/submissionSuccessful" element={<SubmissionSuccessful />} />
         <Route exact path="/screening" element={<ScreeningPage />} />
+        <Route exact path="/login" element={<LoginPage />} />
 
         {role === "super" && mntflg === "off" && (
           <>

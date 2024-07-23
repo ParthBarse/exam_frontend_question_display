@@ -17,7 +17,7 @@ export default function AddStudent() {
 
   useEffect(() => {
     if (!localStorage.getItem("token")) {
-      navigate("/");
+      navigate("/login");
     }
   }, []);
 
