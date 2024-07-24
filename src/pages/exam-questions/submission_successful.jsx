@@ -49,16 +49,30 @@ function submission_success() {
 
   return (
     <div
-      className="d-flex justify-content-center align-items-center vh-100"
-      style={{ background: "#7ca0a9" }}
+      className="d-flex justify-content-center align-items-center"
+      style={{
+        background: "#1B6085",
+        width: "100%",
+        minHeight: "100vh",
+        height: "auto",
+      }}
     >
-      <div className="success-page">
+      <div
+        style={{
+          textAlign: "center",
+          padding: "50px",
+          backgroundColor: "#ffffff",
+          borderRadius: "30px",
+          boxShadow: "0 4px 8px #000000",
+          margin: "100px auto",
+          maxWidth: "90%",
+          height: "auto",
+        }}
+      >
         <div>
-          <p>Dear,</p>
           <name1>
             <strong>{userData.first_name + " " + userData.last_name}</strong>
           </name1>
-          <p>Thanks for Submitting,</p>
           <h2>{userData.exam_name}</h2>
         </div>
         <div>
@@ -79,7 +93,7 @@ function submission_success() {
         </div>
         <div>
           <p1>Your Exam is Submitted Successfully!</p1>
-          <hr />
+
           <p>You will receive the Result and Certificate on Email.</p>
         </div>
       </div>
